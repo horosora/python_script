@@ -88,7 +88,7 @@ key_codes2 = {
 
 args = sys.argv
 if len(args) != 2:
-    print("Usage: " + args[0] + " [pcap file]")
+    print("Usage: python " + args[0] + " [pcap file]")
     sys.exit()
 
 key_input = ""
@@ -103,14 +103,13 @@ for pkt in pcap:
             elif buf[27] == '\x02':
                 key_input += key_codes1[ord(buf[29])][1]
             else:
-                s = "["
+                s = []
                 i = 1
                 for j in bin(ord(buf[27]))[2:]:
                     if int(j) == 1:
-                        s += " " + key_codes2[i] + " "
+                        s.append(key_codes2[i])
                     i += 1
-                s += key_codes1[ord(buf[29])][0] + " "
-                s += "]"
-                key_input += s
+                s.append(key_codes1[ord(buf[29])][0])
+                key_input += '[' + ' + '.join(s) + ']'
 
 print(key_input)
