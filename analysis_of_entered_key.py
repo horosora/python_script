@@ -5,7 +5,7 @@ import sys
 from scapy.all import *
 
 
-key_codes = {
+key_codes1 = {
     0x04: ['a', 'A'],
     0x05: ['b', 'B'],
     0x06: ['c', 'C'],
@@ -42,9 +42,9 @@ key_codes = {
     0x25: ['8', '*'],
     0x26: ['9', '('],
     0x27: ['0', ')'],
-    0x28: ['[Return]','[Enter]'],
+    0x28: ['\x0a', '\x0a'],
     0x29: ['[Escape]', '[Escape]'],
-    0x2a: ['[Backspace]', '[Backspace]'],
+    0x2a: ['\x08', '\x08'],
     0x2b: ['[Tab]', '[Tab]'],
     0x2c: [' ', ' '],
     0x2d: ['-', '_'],
@@ -58,10 +58,32 @@ key_codes = {
     0x36: [',', '<'],
     0x37: ['.', '>'],
     0x38: ['/', '?'],
+    0x39: ['[Caps Lock]', '[Caps Lock]'],
+    0x3a: ['[F1]', '[F1]'],
+    0x3b: ['[F2]', '[F2]'],
+    0x3c: ['[F3]', '[F3]'],
+    0x3d: ['[F4]', '[F5]'],
+    0x3e: ['[F6]', '[F7]'],
+    0x3f: ['[F8]', '[F8]'],
+    0x41: ['[F9]', '[F9]'],
+    0x42: ['[F10]', '[F10]'],
+    0x43: ['[F11]', '[F11]'],
+    0x44: ['[F12]', '[F12]'],
     0x4f: ['[→]', '[→]'],
     0x50: ['[←]', '[←]'],
     0x51: ['[↓]', '[↓]'],
-    0x52: ['[↑]', '[↑]']
+    0x52: ['[↑]', '[↑]'],
+}
+
+key_codes2 = {
+    1: 'Left-Ctrl',
+    2: 'Left-Shift',
+    3: 'Left-Alt',
+    4: 'Left-GUI',
+    5: 'Right-Ctrl',
+    6: 'Right-Shift',
+    7: 'Right-Alt',
+    8: 'Right-GUI'
 }
 
 args = sys.argv
@@ -74,11 +96,21 @@ pcap = rdpcap(args[1])
 for pkt in pcap:
     buf = pkt['Raw'].load
     # URB transfer type: URB_INTERRUPT (0x01)
-    if buf[22] == '\x01':
-        if ord(buf[29]) in key_codes:
-            if buf[27] == '\x02':
-                key_input += key_codes[ord(buf[29])][1]
+    if len(buf) == 35 and buf[22] == '\x01':
+        if ord(buf[29]) in key_codes1:
+            if buf[27] == '\x00':
+                key_input += key_codes1[ord(buf[29])][0]
+            elif buf[27] == '\x02':
+                key_input += key_codes1[ord(buf[29])][1]
             else:
-                key_input += key_codes[ord(buf[29])][0]
+                s = "["
+                i = 1
+                for j in bin(ord(buf[27]))[2:]:
+                    if int(j) == 1:
+                        s += " " + key_codes2[i] + " "
+                    i += 1
+                s += key_codes1[ord(buf[29])][0] + " "
+                s += "]"
+                key_input += s
 
 print(key_input)
