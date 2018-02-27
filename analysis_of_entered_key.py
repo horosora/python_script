@@ -104,11 +104,11 @@ for pkt in pcap:
                 key_input += key_codes1[ord(buf[29])][1]
             else:
                 s = []
-                i = 1
+                i = 8
                 for j in bin(ord(buf[27]))[2:]:
                     if int(j) == 1:
                         s.append(key_codes2[i])
-                    i += 1
+                    i -= 1
                 s.append(key_codes1[ord(buf[29])][0])
                 key_input += '[' + ' + '.join(s) + ']'
 
