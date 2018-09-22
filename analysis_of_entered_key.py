@@ -5,6 +5,11 @@ import sys
 from scapy.all import *
 
 
+args = sys.argv
+if len(args) != 2:
+    print('Usage: python ' + args[0] + ' [pcap file]')
+    sys.exit()
+
 key_codes1 = {
     0x04: ['a', 'A'],
     0x05: ['b', 'B'],
@@ -42,9 +47,9 @@ key_codes1 = {
     0x25: ['8', '*'],
     0x26: ['9', '('],
     0x27: ['0', ')'],
-    0x28: ['\x0a', '\x0a'],
+    0x28: ['[Enter]', '[Enter]'],
     0x29: ['[Escape]', '[Escape]'],
-    0x2a: ['\x08', '\x08'],
+    0x2a: ['[Back Space]', '[Back Space]'],
     0x2b: ['[Tab]', '[Tab]'],
     0x2c: [' ', ' '],
     0x2d: ['-', '_'],
@@ -85,11 +90,6 @@ key_codes2 = {
     7: 'Right-Alt',
     8: 'Right-GUI'
 }
-
-args = sys.argv
-if len(args) != 2:
-    print("Usage: python " + args[0] + " [pcap file]")
-    sys.exit()
 
 key_input = ""
 pcap = rdpcap(args[1])
