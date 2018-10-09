@@ -115,7 +115,3 @@ for pkt in pcap:
                 key_input += "[" + " + ".join(s) + "]"
 
 print(key_input)
-
-
-
-1B 00 10 E0 6F 22 88 D5 FF FF 00 00 00 00 09 00 01 01 00 2E 00 81010800000000001F0000000000
