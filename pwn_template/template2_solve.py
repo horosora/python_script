@@ -5,7 +5,7 @@ import sys
 from pwn import *
 
 
-context(os = "linux", arch = "i386")
+context(os="linux", arch="i386")
 #context.log_level = "debug"
 
 if len(sys.argv) > 1 and sys.argv[2] == "r":
